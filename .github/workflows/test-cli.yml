@@ -1,0 +1,67 @@
+name: Test CLI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cli/**'
+      - '.github/workflows/test-cli.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cli/**'
+      - '.github/workflows/test-cli.yml'
+  workflow_dispatch:
+
+jobs:
+  test-cli:
+    name: Typecheck + build del CLI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cli
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: pnpm
+          cache-dependency-path: cli/pnpm-lock.yaml
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript check
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Smoke test del binario
+        run: |
+          VERSION_OUTPUT=$(node dist/index.js --version)
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$VERSION_OUTPUT" != "$PKG_VERSION" ]; then
+            echo "::error::--version reportó '$VERSION_OUTPUT' pero package.json es '$PKG_VERSION'"
+            exit 1
+          fi
+          echo "OK: --version = $VERSION_OUTPUT"
+
+          # --help debe listar los 4 subcomandos esperados
+          HELP_OUTPUT=$(node dist/index.js --help)
+          for cmd in install apply update doctor; do
+            if ! echo "$HELP_OUTPUT" | grep -q "$cmd"; then
+              echo "::error::--help no menciona el subcomando '$cmd'"
+              exit 1
+            fi
+          done
+          echo "OK: --help lista install, apply, update, doctor"
