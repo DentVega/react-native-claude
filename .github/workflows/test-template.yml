@@ -1,0 +1,110 @@
+name: Test Template
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-template:
+    name: Validar template en proyecto Expo limpio
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Crear proyecto Expo limpio
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project
+          pnpm create expo-app . --template blank-typescript --yes
+        env:
+          CI: true
+
+      - name: Aplicar template (copy + merge package.json)
+        run: |
+          cd /tmp/test-project
+          PROJECT_DIR=$(pwd)
+          TEMPLATE_DIR="${{ github.workspace }}/template"
+
+          # Copiar todo el contenido del template (incluyendo dotfiles)
+          cp -r "$TEMPLATE_DIR"/. "$PROJECT_DIR"/
+
+          # Crear estructura de carpetas requerida por boundaries
+          mkdir -p src/features src/components/ui src/hooks src/services \
+            src/lib src/config src/types src/i18n/locales src/constants src/test \
+            assets/images assets/icons assets/fonts
+
+          # Mergear package.json (usando node)
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const projectPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const templatePkg = JSON.parse(fs.readFileSync('$TEMPLATE_DIR/package.json', 'utf8'));
+
+            projectPkg.scripts = { ...templatePkg.scripts, ...projectPkg.scripts };
+            projectPkg.dependencies = { ...projectPkg.dependencies, ...templatePkg.dependencies };
+            projectPkg.devDependencies = { ...projectPkg.devDependencies, ...templatePkg.devDependencies };
+            projectPkg['lint-staged'] = templatePkg['lint-staged'];
+
+            fs.writeFileSync('package.json', JSON.stringify(projectPkg, null, 2) + '\n');
+          "
+
+      - name: Instalar dependencias
+        working-directory: /tmp/test-project
+        run: pnpm install --no-frozen-lockfile
+
+      - name: TypeScript check
+        working-directory: /tmp/test-project
+        run: pnpm typecheck
+
+      - name: ESLint (debe pasar sin errores, warnings permitidos)
+        working-directory: /tmp/test-project
+        run: pnpm exec eslint . --max-warnings=50
+
+      - name: Prettier check
+        working-directory: /tmp/test-project
+        run: pnpm format:check
+        continue-on-error: true
+
+      - name: Jest (smoke — no debe crashear)
+        working-directory: /tmp/test-project
+        run: pnpm test --passWithNoTests
+
+  lint-commands:
+    name: Validar slash commands
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar frontmatter de commands
+        run: |
+          for cmd in commands/*.md; do
+            if ! head -n1 "$cmd" | grep -q '^---$'; then
+              echo "❌ $cmd no tiene frontmatter YAML" >&2
+              exit 1
+            fi
+            if ! grep -q '^description:' "$cmd"; then
+              echo "❌ $cmd no tiene description en frontmatter" >&2
+              exit 1
+            fi
+          done
+          echo "✅ Todos los commands válidos"
+
+      - name: Verificar install script
+        run: |
+          bash -n scripts/install-commands.sh
+          echo "✅ install-commands.sh sintaxis OK"

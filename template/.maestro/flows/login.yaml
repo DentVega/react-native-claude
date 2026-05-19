@@ -1,0 +1,24 @@
+# Flow de login. Asume que la app abre en la pantalla de login.
+# Ajustar selectores (testID, text) según la implementación real.
+appId: com.example.app
+---
+- launchApp:
+    clearState: true
+
+- assertVisible:
+    id: "login-screen"
+
+- tapOn:
+    id: "email-input"
+- inputText: "test@example.com"
+
+- tapOn:
+    id: "password-input"
+- inputText: "Password123!"
+
+- tapOn:
+    id: "login-submit"
+
+- assertVisible:
+    id: "home-screen"
+    timeout: 5000

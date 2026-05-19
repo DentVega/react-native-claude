@@ -1,0 +1,8 @@
+# Smoke test: la app abre sin crashear y muestra contenido inicial.
+appId: com.example.app
+---
+- launchApp:
+    clearState: true
+- assertVisible: # Reemplazar por un texto/testID que SÍ aparezca al abrir
+    text: ".*" # placeholder — ajustar por proyecto
+- takeScreenshot: smoke-launch

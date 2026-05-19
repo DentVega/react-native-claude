@@ -1,0 +1,11 @@
+# Maestro config
+# https://maestro.mobile.dev/
+
+# appId del proyecto. Reemplazar al iniciar:
+# - iOS: bundle identifier (ej. com.gdgcbba.miapp)
+# - Android: applicationId (ej. com.gdgcbba.miapp)
+appId: com.example.app
+
+# Variables globales accesibles en los flows con ${VAR_NAME}
+# env:
+#   TEST_USER_EMAIL: test@example.com

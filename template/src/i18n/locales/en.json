@@ -1,0 +1,22 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "close": "Close",
+    "search": "Search",
+    "empty": "No results"
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "network": "No connection. Check your internet.",
+    "notFound": "We couldn't find what you were looking for.",
+    "unauthorized": "Your session expired. Please log in again.",
+    "server": "We're having issues. Try again in a few minutes."
+  }
+}

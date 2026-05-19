@@ -1,0 +1,13 @@
+# Archivos del SO
+.DS_Store
+Thumbs.db
+
+# Editores
+.idea/
+*.swp
+*.swo
+.vscode/  # (a nivel de este repo — el template SÍ tiene .vscode/)
+
+# Output local
+node_modules/
+*.log

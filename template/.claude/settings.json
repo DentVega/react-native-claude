@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm lint:fix)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm format)",
+      "Bash(npx expo install:*)",
+      "Bash(npx expo prebuild:*)",
+      "Bash(npx expo-doctor)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Read(**)",
+      "Edit(src/**)",
+      "Edit(app/**)",
+      "Edit(assets/**)",
+      "Edit(*.json)",
+      "Edit(*.ts)",
+      "Edit(*.tsx)",
+      "Edit(*.md)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(eas build:*)",
+      "Bash(eas submit:*)",
+      "Bash(eas update:*)",
+      "Bash(npx expo prebuild --clean)",
+      "Edit(ios/**)",
+      "Edit(android/**)",
+      "Edit(.env*)",
+      "Edit(eas.json)",
+      "Edit(app.json)",
+      "Edit(app.config.*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Read(.env)",
+      "Read(.env.local)",
+      "Read(.env.production)"
+    ]
+  }
+}
