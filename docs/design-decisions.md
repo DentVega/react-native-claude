@@ -117,8 +117,13 @@ expo-config-template/
 ├── commands/
 │   ├── apply-template.md              # Slash command /apply-template
 │   └── update-template.md             # Slash command /update-template
+├── cli/                               # CLI launcher (paquete npm expo-config-template)
+│   ├── src/{index.ts, commands/, lib/}
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── tsup.config.ts
 ├── scripts/
-│   └── install-commands.sh            # Instalador one-liner
+│   └── install-commands.sh            # Instalador bash (fallback sin Node)
 ├── docs/
 │   ├── installation.md
 │   └── customization.md
@@ -224,7 +229,8 @@ claude
 2. **Reemplazar `REEMPLAZAR_USUARIO`** en todos los archivos:
    ```bash
    sed -i '' 's/REEMPLAZAR_USUARIO/tu-usuario/g' \
-     commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md
+     commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md \
+     cli/README.md cli/package.json cli/src/lib/github.ts
    ```
 3. **Crear tag v1.0.0** y GitHub Release.
 4. **Probar el flujo end-to-end** en un proyecto Expo de prueba:

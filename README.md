@@ -30,11 +30,27 @@
 
 ### 1. Instalar los slash commands (una sola vez por máquina)
 
+**Opción A — CLI vía npx (recomendado)**
+
+```bash
+npx expo-config-template install
+```
+
+Otros subcomandos útiles del CLI:
+
+```bash
+npx expo-config-template doctor          # chequear requisitos
+npx expo-config-template apply           # validar proyecto + guiar /apply-template
+npx expo-config-template update          # validar proyecto + guiar /update-template
+```
+
+**Opción B — Script bash (sin Node)**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/REEMPLAZAR_USUARIO/expo-config-template/main/scripts/install-commands.sh | bash
 ```
 
-Esto descarga `apply-template.md` y `update-template.md` a `~/.claude/commands/`.
+Ambas opciones descargan `apply-template.md` y `update-template.md` a `~/.claude/commands/`.
 
 ### 2. En cualquier proyecto Expo
 
@@ -68,7 +84,8 @@ Claude muestra el changelog, calcula el diff, respeta archivos que personalizast
 expo-config-template/
 ├── template/         # Los archivos que se aplican al proyecto destino
 ├── commands/         # Slash commands de Claude Code (/apply-template, /update-template)
-├── scripts/          # Instalador de los comandos
+├── cli/              # CLI launcher publicada en npm como `expo-config-template`
+├── scripts/          # Instalador bash de los comandos (fallback sin Node)
 ├── docs/             # Documentación extendida (installation, customization, design-decisions)
 ├── .github/          # CI (test-template.yml) e issue templates
 ├── CHANGELOG.md      # Cambios por versión (importante para actualizaciones)
@@ -101,7 +118,8 @@ Detalles completos en el `CLAUDE.md` del template.
 
    ```bash
    sed -i '' 's/REEMPLAZAR_USUARIO/tu-usuario/g' \
-     commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md
+     commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md \
+     cli/README.md cli/package.json cli/src/lib/github.ts
    ```
 4. Crea un tag `v1.0.0` y publica.
 

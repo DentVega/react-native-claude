@@ -16,7 +16,16 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 ## [Unreleased]
 
 ### Added
-- _(agregar aquí cambios pendientes de release)_
+- **CLI launcher `expo-config-template`** (`cli/`) — paquete npm con subcomandos `install`, `apply`, `update`, `doctor`. Reemplaza el `curl | bash` como vía recomendada de instalación; el script bash se mantiene como fallback.
+- Tests de ejemplo en el template: `src/lib/cn.test.ts` y `src/components/ui/Button.test.tsx`.
+- Helper `src/test/renderWithProviders.tsx` (QueryClient + i18n).
+- Documento `docs/design-decisions.md` con el contexto completo del diseño del template.
+
+### Changed
+- `jest.setup.ts` del template ahora incluye mocks de `react-native-reanimated`, `AsyncStorage`, `NetInfo` y `expo-secure-store`. Removido el mock obsoleto de `NativeAnimatedHelper`.
+- `.maestro/config.yaml` y los flows usan placeholder `[PROYECTO_APP_ID]` en vez de `com.example.app` hardcodeado.
+- `/apply-template` ahora autocompleta el `appId` de Maestro leyendo `app.json` / `app.config.*` (Paso 5b).
+- `CLAUDE.md` del template documenta la regla del `appId` de Maestro.
 
 ---
 

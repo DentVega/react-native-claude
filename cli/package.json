@@ -1,0 +1,38 @@
+{
+  "name": "expo-config-template",
+  "version": "0.1.0",
+  "description": "CLI launcher para aplicar el expo-config-template a proyectos Expo via Claude Code.",
+  "type": "module",
+  "bin": {
+    "expo-config-template": "./dist/index.js"
+  },
+  "files": ["dist", "README.md"],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "picocolors": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "keywords": ["expo", "react-native", "claude", "template", "cli", "scaffolder"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git",
+    "directory": "cli"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
