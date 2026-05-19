@@ -1,10 +1,13 @@
 # Maestro config
 # https://maestro.mobile.dev/
 
-# appId del proyecto. Reemplazar al iniciar:
+# appId del proyecto.
+# `/apply-template` intenta autocompletar este valor leyendo
+# `expo.ios.bundleIdentifier` o `expo.android.package` de tu `app.json` / `app.config.*`.
+# Si quedó como [PROYECTO_APP_ID], reemplazalo manualmente por:
 # - iOS: bundle identifier (ej. com.gdgcbba.miapp)
 # - Android: applicationId (ej. com.gdgcbba.miapp)
-appId: com.example.app
+appId: "[PROYECTO_APP_ID]"
 
 # Variables globales accesibles en los flows con ${VAR_NAME}
 # env:

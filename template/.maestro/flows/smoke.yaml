@@ -1,5 +1,5 @@
 # Smoke test: la app abre sin crashear y muestra contenido inicial.
-appId: com.example.app
+appId: "[PROYECTO_APP_ID]"
 ---
 - launchApp:
     clearState: true

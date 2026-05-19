@@ -86,6 +86,25 @@ Los archivos a copiar están en `$TEMP_DIR/template/`. Reglas:
 
 Para cada archivo copiado, mantener permisos ejecutables donde aplique (`.husky/pre-commit`, `.husky/commit-msg`).
 
+## Paso 5b — Configurar `appId` de Maestro
+
+Los archivos del template `.maestro/config.yaml`, `.maestro/flows/smoke.yaml` y `.maestro/flows/login.yaml` traen `appId: "[PROYECTO_APP_ID]"` como placeholder. Intentar reemplazarlo automáticamente:
+
+1. **Leer el `app.json` o `app.config.*`** del proyecto destino. Buscar, en este orden, el primer valor no vacío:
+   - `expo.ios.bundleIdentifier`
+   - `expo.android.package`
+   - Si el archivo es `app.config.ts`/`app.config.js` y no se puede evaluar estáticamente (tiene lógica con env vars, etc.), **no intentes ejecutarlo** — saltar al paso 3.
+
+2. **Si encontraste un valor válido** (formato típico `com.algo.algo`):
+   - Reemplazar `"[PROYECTO_APP_ID]"` por `<valor>` (sin comillas, ya que ahora es un string YAML normal) en los tres archivos `.maestro/*.yaml` copiados al proyecto.
+   - Confirmar al usuario: `Maestro appId configurado como <valor>`.
+
+3. **Si no encontraste un valor** (proyecto recién creado sin bundleIdentifier/package todavía, o `app.config.ts` con lógica dinámica):
+   - **Dejar el placeholder `[PROYECTO_APP_ID]` como está**.
+   - Anotar este caso para el reporte final del paso 12 como un warning explícito: el usuario tendrá que reemplazarlo manualmente cuando defina el bundle id.
+
+No tocar el `app.json` / `app.config.*` del proyecto — solo lectura.
+
 ## Paso 6 — Mergear `package.json`
 
 Esto es lo más delicado. Reglas:
@@ -168,7 +187,7 @@ Archivos saltados (ya existían): <N>
 Próximos pasos:
   1. Personalizar CLAUDE.md: reemplazar [PROYECTO: ...] con datos reales del proyecto
   2. Copiar .env.example a .env y rellenar las variables
-  3. Actualizar appId en .maestro/config.yaml y flows
+  3. (Solo si quedó [PROYECTO_APP_ID]) Definir bundleIdentifier/package en app.json y reemplazar el placeholder en .maestro/*.yaml
   4. (Opcional) Instalar skills externas — ver template/README.md sección 8
   5. Crear el primer feature con: /feature <nombre>
 

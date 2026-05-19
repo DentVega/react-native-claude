@@ -312,6 +312,7 @@ Alias `@/*` → `src/*` configurado en `tsconfig.json` y `babel.config.js`.
 - Agregar `testID` en componentes que vayan a tocarse en E2E. Naming: `<feature>-<elemento>` (ej. `login-submit`, `home-cta`).
 - Correr E2E **antes de cada release** (manual o en CI con Maestro Cloud / EAS Build).
 - `pnpm e2e:smoke` se corre rápido y debería pasar siempre — si falla, hay algo grave.
+- **`appId`**: debe coincidir con `expo.ios.bundleIdentifier` y `expo.android.package` de tu `app.json` / `app.config.*`. `/apply-template` lo intenta autocompletar; si quedó como `[PROYECTO_APP_ID]` en `.maestro/config.yaml` y los flows, reemplazalo manualmente antes de correr E2E.
 
 ### Comandos
 

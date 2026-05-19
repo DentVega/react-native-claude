@@ -1,6 +1,6 @@
 # Flow de login. Asume que la app abre en la pantalla de login.
 # Ajustar selectores (testID, text) según la implementación real.
-appId: com.example.app
+appId: "[PROYECTO_APP_ID]"
 ---
 - launchApp:
     clearState: true

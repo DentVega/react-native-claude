@@ -69,8 +69,11 @@ expo-config-template/
 ├── template/         # Los archivos que se aplican al proyecto destino
 ├── commands/         # Slash commands de Claude Code (/apply-template, /update-template)
 ├── scripts/          # Instalador de los comandos
-├── docs/             # Documentación extendida
+├── docs/             # Documentación extendida (installation, customization, design-decisions)
+├── .github/          # CI (test-template.yml) e issue templates
 ├── CHANGELOG.md      # Cambios por versión (importante para actualizaciones)
+├── CONTRIBUTING.md   # Reglas de PRs y releases
+├── LICENSE           # MIT
 └── README.md
 ```
 
@@ -94,9 +97,13 @@ Detalles completos en el `CLAUDE.md` del template.
 
 1. Forkea el repo.
 2. Edita `template/CLAUDE.md` con tus opiniones (o `template/` completo).
-3. Edita `commands/apply-template.md` y `commands/update-template.md`, reemplazá `REEMPLAZAR_USUARIO` por tu usuario de GitHub.
-4. (Opcional) Edita `scripts/install-commands.sh` con la URL de tu fork.
-5. Crea un tag `v1.0.0` y publica.
+3. Reemplazá `REEMPLAZAR_USUARIO` por tu usuario/org de GitHub en todos los archivos que lo referencian:
+
+   ```bash
+   sed -i '' 's/REEMPLAZAR_USUARIO/tu-usuario/g' \
+     commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md
+   ```
+4. Crea un tag `v1.0.0` y publica.
 
 A partir de ahí, tu equipo puede usar tu fork con `curl ... tu-usuario/expo-config-template ... | bash`.
 
