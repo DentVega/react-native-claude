@@ -18,7 +18,7 @@
 - ✅ **Husky + lint-staged + commitlint** (Conventional Commits forzado)
 - 🤖 **`CLAUDE.md` completo** con convenciones, arquitectura, qué sí y qué no hacer
 - ⚡ **Slash command `/feature`** para scaffold de features completos
-- 🧠 **Integración con skills oficiales** de Callstack y Vercel
+- 🧠 **Integración con skills oficiales** de Expo, Callstack y Vercel
 
 ## Requisitos
 
@@ -130,6 +130,9 @@ A partir de ahí, tu equipo puede usar tu fork con `curl ... tu-usuario/expo-con
 El template referencia (pero no incluye) skills oficiales que potencian a Claude Code para RN. Instalables una vez por máquina:
 
 ```bash
+# Expo: Expo Router, EAS Build/Update/Submit, deployment, upgrades
+bunx skills add expo/skills
+
 # Callstack: performance, optimización, workflows
 git clone https://github.com/callstackincubator/agent-skills.git \
   ~/.claude/skills/callstack-agent-skills
@@ -138,6 +141,8 @@ git clone https://github.com/callstackincubator/agent-skills.git \
 git clone https://github.com/vercel-labs/agent-skills.git \
   ~/.claude/skills/vercel-agent-skills
 ```
+
+`bunx skills add expo/skills` requiere [Bun](https://bun.sh). Repo: [github.com/expo/skills](https://github.com/expo/skills). El detalle de qué skill cubre qué dominio está en [`template/CLAUDE.md`](template/CLAUDE.md).
 
 ## Contribuir
 

@@ -43,6 +43,15 @@ Las siguientes Agent Skills están instaladas a nivel usuario (`~/.claude/skills
 | `react-best-practices` | Vercel | Waterfalls de requests, re-renders, optimización de React puro, patrones de data fetching |
 | `composition-patterns` | Vercel | Diseño de componentes UI reusables, compound components, evitar boolean prop hell |
 | `github` / `github-actions` | Callstack | Workflows de PR, CI/CD para apps RN |
+| `building-native-ui` | Expo | Patrones de UI nativa, navegación con Expo Router, Apple HIG, SF Symbols, animaciones y efectos visuales |
+| `native-data-fetching` | Expo | Network requests, TanStack Query/SWR, estrategias de cache, manejo de errores, soporte offline |
+| `expo-dev-client` | Expo | Builds de desarrollo custom para probar código nativo en device físico con EAS Build |
+| `cicd-workflows` | Expo | EAS workflow YAML, pipelines de build, automatización de deployment |
+| `expo-deployment` | Expo | EAS Build, App Store, Play Store, TestFlight, web hosting, flujos de submission |
+| `upgrading-expo` | Expo | Upgrades paso a paso del SDK, reemplazo de paquetes deprecados, limpieza de caches |
+| `eas-update-insights` | Expo | Salud de EAS Updates publicados: crash rates, install/launch counts, unique users |
+
+> Nota: las skills de Expo `expo-tailwind-setup` (NativeWind v5, este template fija v4), `expo-api-routes` (backend en el mismo repo) y `use-dom` (libs solo-web vía DOM components) **no** están en la lista por defecto — agregalas si tu proyecto las necesita.
 
 **Reglas de precedencia**:
 - Cuando una skill recomienda algo que **contradice** este `CLAUDE.md`, gana este `CLAUDE.md` (refleja decisiones del proyecto).

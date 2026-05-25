@@ -110,9 +110,12 @@ pnpm start
 
 ### 8. (Opcional pero recomendado) Instalar skills externas
 
-Skills oficiales de Callstack y Vercel que potencian Claude Code para RN. Se instalan **a nivel usuario** (no por proyecto), una sola vez:
+Skills oficiales de Expo, Callstack y Vercel que potencian Claude Code para RN. Se instalan **a nivel usuario** (no por proyecto), una sola vez:
 
 ```bash
+# Expo: Expo Router, EAS Build/Update/Submit, deployment, upgrades
+bunx skills add expo/skills
+
 # Callstack: performance, optimización, workflows de RN
 git clone https://github.com/callstackincubator/agent-skills.git \
   ~/.claude/skills/callstack-agent-skills
@@ -124,7 +127,11 @@ git clone https://github.com/vercel-labs/agent-skills.git \
 
 Claude Code las descubre automáticamente. El `CLAUDE.md` del template ya las menciona, así que Claude sabrá cuándo apoyarse en ellas.
 
-Para actualizarlas más adelante: `cd ~/.claude/skills/<repo> && git pull`.
+Para actualizarlas más adelante:
+- Expo: volver a correr `bunx skills add expo/skills`.
+- Callstack / Vercel: `cd ~/.claude/skills/<repo> && git pull`.
+
+> El comando `bunx skills add expo/skills` requiere [Bun](https://bun.sh) instalado. Repo oficial: [github.com/expo/skills](https://github.com/expo/skills).
 
 ## Slash commands incluidos
 
