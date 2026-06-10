@@ -15,11 +15,16 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ## [Unreleased]
 
+---
+
+## [1.1.0] - 2026-05-25
+
 ### Added
 - **CLI launcher `expo-config-template`** (`cli/`) — paquete npm con subcomandos `install`, `apply`, `update`, `doctor`. Reemplaza el `curl | bash` como vía recomendada de instalación; el script bash se mantiene como fallback.
 - Tests de ejemplo en el template: `src/lib/cn.test.ts` y `src/components/ui/Button.test.tsx`.
 - Helper `src/test/renderWithProviders.tsx` (QueryClient + i18n).
 - Documento `docs/design-decisions.md` con el contexto completo del diseño del template.
+- Referencia a las 7 skills oficiales de Expo (`building-native-ui`, `native-data-fetching`, `expo-dev-client`, `cicd-workflows`, `expo-deployment`, `upgrading-expo`, `eas-update-insights`) en `template/CLAUDE.md` y comando de instalación `bunx skills add expo/skills` en los READMEs.
 
 ### Changed
 - `jest.setup.ts` del template ahora incluye mocks de `react-native-reanimated`, `AsyncStorage`, `NetInfo` y `expo-secure-store`. Removido el mock obsoleto de `NativeAnimatedHelper`.
@@ -98,5 +103,6 @@ Primera versión pública. Base completa para apps Expo con TypeScript, NativeWi
 - `commands/update-template.md` — slash command para actualizar el template
 - `scripts/install-commands.sh` — instalador de los comandos en `~/.claude/commands/`
 
-[Unreleased]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/releases/tag/v1.0.0
