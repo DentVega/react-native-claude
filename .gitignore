@@ -11,3 +11,7 @@ Thumbs.db
 # Output local
 node_modules/
 *.log
+
+# Claude Code: per-machine settings, never compartir
+.claude/settings.local.json
+.claude/*.local.*
