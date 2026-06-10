@@ -103,6 +103,6 @@ Primera versión pública. Base completa para apps Expo con TypeScript, NativeWi
 - `commands/update-template.md` — slash command para actualizar el template
 - `scripts/install-commands.sh` — instalador de los comandos en `~/.claude/commands/`
 
-[Unreleased]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/REEMPLAZAR_USUARIO/expo-config-template/releases/tag/v1.0.0
+[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/DentVega/react-native-claude/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/DentVega/react-native-claude/releases/tag/v1.0.0

@@ -159,7 +159,7 @@ expo-config-template/
 
 **Instalación una vez por máquina**:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/REEMPLAZAR_USUARIO/expo-config-template/main/scripts/install-commands.sh | bash
+curl -fsSL https://raw.githubusercontent.com/DentVega/react-native-claude/main/scripts/install-commands.sh | bash
 ```
 
 Descarga los slash commands a `~/.claude/commands/`.
@@ -225,14 +225,15 @@ claude
 
 ### Inmediato
 
-1. **Subir el repo a GitHub** (privado primero, sugerido).
-2. **Reemplazar `REEMPLAZAR_USUARIO`** en todos los archivos:
+1. **Subir el repo a GitHub** (privado primero, sugerido). _(Hecho: `DentVega/react-native-claude`.)_
+2. **Reemplazar la URL del repo** (para forks futuros):
    ```bash
-   sed -i '' 's/REEMPLAZAR_USUARIO/tu-usuario/g' \
+   sed -i '' 's|DentVega/react-native-claude|tu-usuario/tu-repo|g' \
      commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md \
-     cli/README.md cli/package.json cli/src/lib/github.ts
+     cli/README.md cli/package.json
+   # más editar REPO_OWNER y REPO_NAME en cli/src/lib/github.ts
    ```
-3. **Crear tag v1.0.0** y GitHub Release.
+3. **Crear tag v1.0.0** y GitHub Release. _(Hecho hasta v1.1.0.)_
 4. **Probar el flujo end-to-end** en un proyecto Expo de prueba:
    - Instalar comandos con el script.
    - Crear `pnpm create expo-app test-app`.

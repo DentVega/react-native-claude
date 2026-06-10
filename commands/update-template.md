@@ -13,9 +13,7 @@ Actualiza el template instalado en este proyecto a una versión más nueva. Mues
 
 ## URL del repo
 
-`https://github.com/REEMPLAZAR_USUARIO/expo-config-template`
-
-> Si esta URL todavía dice `REEMPLAZAR_USUARIO`, **detenete** y avisá al usuario que debe configurar la URL real del repo en `~/.claude/commands/update-template.md`.
+`https://github.com/DentVega/react-native-claude`
 
 ---
 
@@ -32,7 +30,7 @@ CURRENT_VERSION=<leído de .template-version>
 TARGET_VERSION="$ARGUMENTS"
 if [ -z "$TARGET_VERSION" ]; then
   TARGET_VERSION=$(git ls-remote --tags --refs --sort='-version:refname' \
-    https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git \
+    https://github.com/DentVega/react-native-claude.git \
     | head -n1 | awk -F'/' '{print $NF}')
 fi
 ```
@@ -44,10 +42,10 @@ Si `$TARGET_VERSION == $CURRENT_VERSION`: avisar "ya estás en la última versi�
 ```bash
 TEMP_DIR=$(mktemp -d)
 git clone --depth 1 --branch "$CURRENT_VERSION" \
-  https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git \
+  https://github.com/DentVega/react-native-claude.git \
   "$TEMP_DIR/current"
 git clone --depth 1 --branch "$TARGET_VERSION" \
-  https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git \
+  https://github.com/DentVega/react-native-claude.git \
   "$TEMP_DIR/target"
 ```
 

@@ -13,9 +13,7 @@ Aplica el template de configuración para apps Expo al proyecto actual. Funciona
 
 ## URL del repo
 
-`https://github.com/REEMPLAZAR_USUARIO/expo-config-template`
-
-> Si esta URL todavía dice `REEMPLAZAR_USUARIO`, **detenete** y avisá al usuario que debe configurar la URL real del repo en este archivo (`~/.claude/commands/apply-template.md`).
+`https://github.com/DentVega/react-native-claude`
 
 ---
 
@@ -55,14 +53,14 @@ TARGET_VERSION="$ARGUMENTS"
 if [ -z "$TARGET_VERSION" ]; then
   # Obtener el último tag del repo
   TARGET_VERSION=$(git ls-remote --tags --refs --sort='-version:refname' \
-    https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git \
+    https://github.com/DentVega/react-native-claude.git \
     | head -n1 | awk -F'/' '{print $NF}')
 fi
 
 # Clonar a /tmp
 TEMP_DIR=$(mktemp -d)
 git clone --depth 1 --branch "$TARGET_VERSION" \
-  https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git \
+  https://github.com/DentVega/react-native-claude.git \
   "$TEMP_DIR"
 ```
 
@@ -157,7 +155,7 @@ Crear archivo `.template-version` en la raíz del proyecto con el siguiente cont
 ```
 version: <TARGET_VERSION>
 applied_at: <fecha ISO actual>
-repo: https://github.com/REEMPLAZAR_USUARIO/expo-config-template
+repo: https://github.com/DentVega/react-native-claude
 ```
 
 Este archivo lo lee `/update-template` después. **No debe** estar en `.gitignore` — debe commitearse.

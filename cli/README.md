@@ -1,6 +1,6 @@
 # expo-config-template (CLI)
 
-Launcher para aplicar el [expo-config-template](https://github.com/REEMPLAZAR_USUARIO/expo-config-template) a un proyecto Expo via Claude Code.
+Launcher para aplicar el [expo-config-template](https://github.com/DentVega/react-native-claude) a un proyecto Expo via Claude Code.
 
 ## Uso
 

@@ -116,7 +116,7 @@ Si querés mantener sync con upstream:
 
 ```bash
 # Una sola vez:
-git remote add upstream https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git
+git remote add upstream https://github.com/DentVega/react-native-claude.git
 
 # Cada tanto:
 git fetch upstream

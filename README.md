@@ -47,7 +47,7 @@ npx expo-config-template update          # validar proyecto + guiar /update-temp
 **Opción B — Script bash (sin Node)**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/REEMPLAZAR_USUARIO/expo-config-template/main/scripts/install-commands.sh | bash
+curl -fsSL https://raw.githubusercontent.com/DentVega/react-native-claude/main/scripts/install-commands.sh | bash
 ```
 
 Ambas opciones descargan `apply-template.md` y `update-template.md` a `~/.claude/commands/`.
@@ -114,16 +114,18 @@ Detalles completos en el `CLAUDE.md` del template.
 
 1. Forkea el repo.
 2. Edita `template/CLAUDE.md` con tus opiniones (o `template/` completo).
-3. Reemplazá `REEMPLAZAR_USUARIO` por tu usuario/org de GitHub en todos los archivos que lo referencian:
+3. Reemplazá `DentVega/react-native-claude` por `tu-usuario/tu-repo` en todos los archivos que lo referencian:
 
    ```bash
-   sed -i '' 's/REEMPLAZAR_USUARIO/tu-usuario/g' \
+   sed -i '' 's|DentVega/react-native-claude|tu-usuario/tu-repo|g' \
      commands/*.md scripts/*.sh README.md CHANGELOG.md docs/*.md \
-     cli/README.md cli/package.json cli/src/lib/github.ts
+     cli/README.md cli/package.json
    ```
+
+   Y editá manualmente las dos constantes en `cli/src/lib/github.ts` (`REPO_OWNER` y `REPO_NAME`).
 4. Crea un tag `v1.0.0` y publica.
 
-A partir de ahí, tu equipo puede usar tu fork con `curl ... tu-usuario/expo-config-template ... | bash`.
+A partir de ahí, tu equipo puede usar tu fork con `curl ... tu-usuario/tu-repo ... | bash`.
 
 ## Skills externas recomendadas
 

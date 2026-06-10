@@ -1,5 +1,5 @@
-const REPO_OWNER = 'REEMPLAZAR_USUARIO';
-const REPO_NAME = 'expo-config-template';
+const REPO_OWNER = 'DentVega';
+const REPO_NAME = 'react-native-claude';
 
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}`;
 const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;

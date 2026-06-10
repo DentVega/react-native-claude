@@ -12,7 +12,7 @@
 ### Paso 1 — Instalar los slash commands (una vez por máquina)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/REEMPLAZAR_USUARIO/expo-config-template/main/scripts/install-commands.sh | bash
+curl -fsSL https://raw.githubusercontent.com/DentVega/react-native-claude/main/scripts/install-commands.sh | bash
 ```
 
 Esto crea:
@@ -68,7 +68,7 @@ Si preferís no usar el slash command:
 
 ```bash
 # Clonar
-git clone --depth 1 https://github.com/REEMPLAZAR_USUARIO/expo-config-template.git /tmp/template
+git clone --depth 1 https://github.com/DentVega/react-native-claude.git /tmp/template
 
 # Copiar archivos
 cp -r /tmp/template/template/. mi-proyecto/
@@ -91,7 +91,7 @@ chmod +x .husky/pre-commit .husky/commit-msg
 # Crear .template-version
 echo "version: v1.0.0
 applied_at: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-repo: https://github.com/REEMPLAZAR_USUARIO/expo-config-template" > .template-version
+repo: https://github.com/DentVega/react-native-claude" > .template-version
 ```
 
 ## Forks privados
@@ -99,12 +99,12 @@ repo: https://github.com/REEMPLAZAR_USUARIO/expo-config-template" > .template-ve
 Si estás usando un fork privado del template (recomendado para empresas/grupos):
 
 1. Forkeá el repo.
-2. Editá `commands/apply-template.md`, `commands/update-template.md`, `scripts/install-commands.sh` reemplazando `REEMPLAZAR_USUARIO` por tu org/usuario.
-3. Editá `scripts/install-commands.sh` o usá la env var:
+2. Reemplazá `DentVega/react-native-claude` por `tu-org/tu-repo` en todos los archivos que lo referencian (`commands/*.md`, `scripts/install-commands.sh`, `README.md`, `CHANGELOG.md`, `docs/*.md`, `cli/README.md`, `cli/package.json`) y actualizá las constantes `REPO_OWNER` / `REPO_NAME` en `cli/src/lib/github.ts`.
+3. Usá tu fork directamente o sobreescribí en runtime con la env var:
 
 ```bash
-EXPO_TEMPLATE_REPO=https://github.com/tu-org/expo-config-template \
-  curl -fsSL https://raw.githubusercontent.com/tu-org/expo-config-template/main/scripts/install-commands.sh | bash
+EXPO_TEMPLATE_REPO=https://github.com/tu-org/tu-repo \
+  curl -fsSL https://raw.githubusercontent.com/tu-org/tu-repo/main/scripts/install-commands.sh | bash
 ```
 
 4. Para repos privados, los miembros necesitan acceso. El clone usa el git config del usuario (SSH o HTTPS con credenciales).
