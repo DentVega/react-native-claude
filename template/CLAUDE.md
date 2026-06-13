@@ -238,6 +238,79 @@ Scope opcional: `feat(auth): agregar login con Google`.
 
 ---
 
+## Principios de diseño de componentes
+
+Reglas concretas para componer UI. Son **decisiones por defecto** — si un caso justifica romperlas, levantá la duda antes de hacerlo.
+
+### 1. Una responsabilidad por componente
+
+- Si para describir lo que hace usás la palabra **"y"** (ej: "renderiza el formulario **y** llama al API **y** maneja errores"), partilo. Una pieza orquesta, otra renderiza.
+- Límite informal: **~150 líneas**. Si pasa, dividí — no por la línea per se, sino porque cuando un archivo crece así suele haber dos responsabilidades adentro.
+- Container vs presentational es la aplicación concreta de esta regla a feature/screen.
+
+### 2. Componer, no acumular props booleanas
+
+Anti-patrón:
+```tsx
+<Button primary danger small disabled loading icon="trash" iconPosition="right" />
+```
+
+Mejor:
+```tsx
+<Button variant="danger" size="sm" loading>
+  <Trash /> Eliminar
+</Button>
+```
+
+- Variantes complejas: definirlas con `cva` (class-variance-authority), no con cadenas de `&&` en `className`.
+- Para combinaciones que crecen, **compound components**: `<Modal><Modal.Header/><Modal.Body/><Modal.Footer/></Modal>`.
+- Si el componente acepta más de **3-4 props booleanas**, casi siempre se puede reemplazar por `children`, slots, o variantes.
+- Consultá la skill `composition-patterns` (Vercel) cuando estés diseñando un componente reutilizable nuevo.
+
+### 3. Props chicas, semánticas, sin "configuración"
+
+- Pasá `children` y callbacks (`onSubmit`, `onPress`) antes que objetos de configuración (`{ submitLabel, submitColor, submitLoading, ... }`).
+- Si un componente necesita 8+ props para funcionar, repensá si no son **dos componentes** disfrazados de uno.
+- Evitá props de tipo `any` o `Record<string, unknown>` — eso esconde acoplamientos.
+
+### 4. Primitivos compartidos vs componentes de feature
+
+- **`src/components/ui/`** → primitivos reutilizables sin lógica de negocio: `Button`, `Input`, `Card`, `ScreenState`. Visten el sistema de diseño.
+- **`src/features/X/components/`** → componentes específicos del feature: `LoginForm`, `ProductCard`. Conocen los tipos del feature.
+- **Regla de promoción**: un componente sube de `features/X/components/` a `components/ui/` **solo cuando se usa en 2+ features**. Antes de eso, vive en su feature.
+- **Regla inversa**: si un componente en `components/ui/` importa algo de `features/`, está mal ubicado — bajalo al feature.
+
+### 5. Datos: una sola fuente por tipo
+
+Ya está en "Manejo de estado" más arriba; repetido acá porque es un principio de diseño, no solo de estado:
+
+| Tipo de dato | Dónde vive | Cómo se pasa al componente |
+|---|---|---|
+| Viene del servidor | TanStack Query | Hook (`useUserQuery`) en el container, props al presentational |
+| UI / sesión / preferencias | Zustand | Hook (`useAuthStore`) en el container, props al presentational |
+| Local a una pantalla | `useState` | Directo en el componente que lo usa |
+
+**Los componentes presentational no leen stores ni queries.** Reciben datos por props. Esa es la regla que los hace fácilmente testeables.
+
+### 6. Inyectar dependencias por props, no por imports — cuando importa
+
+- Para componentes presentational: callbacks (`onSubmit`, `onPress`) en vez de importar servicios adentro. Hace el componente reusable y testeable.
+- Para hooks de feature (`useLogin`): pueden importar servicios directamente — no es necesario inyectar todo. La inyección es valiosa **en el límite presentational**, no en cada función.
+- No abuses de `Context` para inyectar — es para datos que **muchos descendientes** necesitan (tema, auth user), no para evitar pasar props un nivel.
+
+### 7. Decisiones explícitas, no mágicas
+
+- Si una pantalla tiene un comportamiento sorprendente (auto-refetch, side effect oculto, navegación implícita), **comentar el porqué** una línea — no el qué.
+- Preferí código verboso y claro a abstracciones inteligentes que ahorran 3 líneas pero esconden la intención.
+- Repetir 2-3 veces algo similar está bien. Abstraé al **tercer caso real**, no por anticipación.
+
+### Qué NO seguimos (a propósito)
+
+- **Atomic Design** (atoms/molecules/organisms/templates/pages): la organización **por feature** que ya tenés escala mejor para apps. Sí mantenemos la idea de "primitivos compartidos" via `components/ui/`, pero sin la jerarquía de 5 niveles.
+- **SOLID al pie de la letra**: pensado para OOP. Las reglas de arriba cubren lo aplicable a React (SRP, ISP, composición) sin el bagaje de los acrónimos.
+
+---
+
 ## Convenciones de código
 
 ### Nombres

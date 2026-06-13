@@ -15,6 +15,9 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ## [Unreleased]
 
+### Added
+- Sección **"Principios de diseño de componentes"** en `template/CLAUDE.md` con reglas concretas: una responsabilidad por componente, composición sobre props booleanas, props chicas, promoción de primitivos a `components/ui/`, fuente única por tipo de dato, inyección por props en el borde presentational. Incluye bloque explícito de qué no seguimos (Atomic Design completo, SOLID al pie de la letra).
+
 ---
 
 ## [1.1.0] - 2026-05-25
