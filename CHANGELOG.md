@@ -15,6 +15,10 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ## [Unreleased]
 
+---
+
+## [1.1.1] - 2026-05-25
+
 ### Added
 - Sección **"Principios de diseño de componentes"** en `template/CLAUDE.md` con reglas concretas: una responsabilidad por componente, composición sobre props booleanas, props chicas, promoción de primitivos a `components/ui/`, fuente única por tipo de dato, inyección por props en el borde presentational. Incluye bloque explícito de qué no seguimos (Atomic Design completo, SOLID al pie de la letra).
 - Soporte del layout `src/app/` además de `app/` raíz en `eslint.config.js` (boundaries acepta ambos) y en `apply-template` (detecta `APP_DIR`).
@@ -124,6 +128,7 @@ Primera versión pública. Base completa para apps Expo con TypeScript, NativeWi
 - `commands/update-template.md` — slash command para actualizar el template
 - `scripts/install-commands.sh` — instalador de los comandos en `~/.claude/commands/`
 
-[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/DentVega/react-native-claude/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/DentVega/react-native-claude/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/DentVega/react-native-claude/releases/tag/v1.0.0
