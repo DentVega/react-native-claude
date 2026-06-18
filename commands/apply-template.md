@@ -33,8 +33,9 @@ Sin preguntar al usuario, detectar:
 - **Gestor de paquetes**: revisar lockfiles (`pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `package-lock.json` → npm, `bun.lockb` → bun). Si no hay lockfile, default pnpm.
 - **¿TypeScript ya configurado?**: existe `tsconfig.json`.
 - **¿Es proyecto nuevo o existente?**: si solo existen los archivos default de `create-expo-app` (App.tsx o app/index.tsx default, sin `src/`), tratarlo como nuevo. Si tiene `src/` con código real, existente.
+- **Layout de expo-router**: ¿el proyecto usa `app/` en la raíz o `src/app/`? Si existe `src/app/_layout.tsx` (o `src/app/index.tsx`), es layout **`src/app/`**. Si no, asumí `app/` raíz (default de `create-expo-app`). Llamá a esta variable `APP_DIR` (vale `app` o `src/app`).
 
-Reportá brevemente lo detectado al usuario antes de seguir.
+Reportá brevemente lo detectado al usuario antes de seguir, incluyendo `APP_DIR`.
 
 ## Paso 3 — Preguntar lo mínimo necesario
 
@@ -74,13 +75,15 @@ Los archivos a copiar están en `$TEMP_DIR/template/`. Reglas:
 
 - **Archivos "template-managed"** (sobrescribir sin preguntar si están en su forma default): `eslint.config.js`, `babel.config.js`, `metro.config.js`, `tailwind.config.js`, `tsconfig.json`, `jest.config.js`, `jest.setup.ts`, `commitlint.config.js`, `.prettierrc`, `.prettierignore`, `.editorconfig`, `.gitignore`, `global.css`.
 
-- **Archivos "user-owned"** (NO sobrescribir si ya existen, solo crear si faltan): `CLAUDE.md`, `.env.example`, `tailwind.config.js` (si tiene customizaciones), `app/_layout.tsx`.
+- **Archivos "user-owned"** (NO sobrescribir si ya existen, solo crear si faltan): `CLAUDE.md`, `README.md`, `.env.example`, `tailwind.config.js` (si tiene customizaciones), y el `_layout.tsx` raíz del proyecto (que vive en `$APP_DIR/_layout.tsx` — `app/_layout.tsx` o `src/app/_layout.tsx` según lo detectado en el Paso 2).
 
   Si ya existen y son diferentes al del template, **mostrar el diff al usuario** y preguntar caso por caso.
 
-- **Archivos nuevos** (copiar siempre, no deberían existir): todo lo que esté en `src/`, `.claude/`, `.maestro/`, `.husky/`, `.vscode/`.
+- **Archivos nuevos** (copiar siempre, no deberían existir): todo lo que esté en `src/` (excepto `src/app/` si el proyecto ya lo tiene, que es user-owned), `.claude/`, `.maestro/`, `.husky/`, `.vscode/`.
 
 - **`package.json`**: NO sobrescribir nunca. Ver paso 6.
+
+**Importante sobre el layout de expo-router**: el template trae `app/_layout.tsx`. Si el proyecto destino usa `src/app/`, copialo a `src/app/_layout.tsx` en vez de `app/_layout.tsx`. No dejes ambos directorios: confundís a expo-router.
 
 Para cada archivo copiado, mantener permisos ejecutables donde aplique (`.husky/pre-commit`, `.husky/commit-msg`).
 
@@ -129,12 +132,10 @@ Para las que queden vacías después de copiar los archivos del template, agrega
 
 ## Paso 8 — Instalar dependencias
 
-Usar el gestor detectado en el paso 2:
+Usar el gestor detectado en el paso 2 (a partir de ahora `$PKG`):
 
 ```bash
-# pnpm (default)
-pnpm install
-# o yarn / npm / bun según corresponda
+$PKG install
 ```
 
 Si la instalación falla, detenerse, reportar el error, y NO continuar a los pasos siguientes.
@@ -142,11 +143,21 @@ Si la instalación falla, detenerse, reportar el error, y NO continuar a los pas
 ## Paso 9 — Activar Husky
 
 ```bash
-pnpm exec husky init  # o yarn/npm equivalente
-chmod +x .husky/pre-commit .husky/commit-msg
+$PKG exec husky init
 ```
 
-Si el comando falla porque husky no está instalado, ya debería estarlo después del paso 8 — si igual falla, reportar y seguir (no es bloqueante).
+`husky init` **sobrescribe** `.husky/pre-commit` con un default `npm test`. Después de correrlo:
+
+1. Volvé a copiar `$TEMP_DIR/template/.husky/pre-commit` sobre `.husky/pre-commit` para restaurar el contenido del template (que detecta `$PKG` por lockfile y corre `typecheck`).
+2. `chmod +x .husky/pre-commit .husky/commit-msg`.
+
+Si `husky init` falla porque husky no está instalado, ya debería estarlo después del paso 8 — si igual falla, reportar y seguir (no es bloqueante).
+
+## Paso 9b — Crear `.env` inicial
+
+Si **no** existe `.env` en la raíz y **sí** existe `.env.example` (recién copiado del template), copiá `.env.example → .env`. Avisá al usuario: "Creé `.env` desde `.env.example` — rellená los valores reales antes de correr la app."
+
+Si ya existía `.env`, no tocar nada.
 
 ## Paso 10 — Marcar versión instalada
 
@@ -165,8 +176,8 @@ Este archivo lo lee `/update-template` después. **No debe** estar en `.gitignor
 Correr en este orden, deteniéndose si alguno falla:
 
 ```bash
-pnpm typecheck   # debe pasar
-pnpm lint        # puede tener warnings, pero no errores
+$PKG run typecheck   # debe pasar
+$PKG run lint        # puede tener warnings, pero no errores
 ```
 
 Si `lint` reporta errores de `boundaries/element-types` por carpetas vacías, recordá que el plugin requiere estructura — sugerir al usuario que verifique que el paso 7 corrió correctamente.
@@ -184,15 +195,19 @@ Archivos saltados (ya existían): <N>
 
 Próximos pasos:
   1. Personalizar CLAUDE.md: reemplazar [PROYECTO: ...] con datos reales del proyecto
-  2. Copiar .env.example a .env y rellenar las variables
+  2. Rellenar las variables en .env (creado desde .env.example en el Paso 9b)
   3. (Solo si quedó [PROYECTO_APP_ID]) Definir bundleIdentifier/package en app.json y reemplazar el placeholder en .maestro/*.yaml
   4. (Opcional) Instalar skills externas — ver template/README.md sección 8
   5. Crear el primer feature con: /feature <nombre>
 
 ⚠️ Warnings (si los hay):
   - Dependencia X mantenida en versión Y (template recomienda Z)
+  - Layout detectado: $APP_DIR (importante si esperabas otro)
+  - Maestro appId quedó como [PROYECTO_APP_ID] (no encontré bundleIdentifier/package en app.json)
   - ...
 ```
+
+**Si quedó `[PROYECTO_APP_ID]` en `.maestro/*.yaml`**, destacar ese warning explícitamente — no es un detalle menor, los E2E no van a correr hasta resolverlo.
 
 ## Lo que NO se debe hacer
 

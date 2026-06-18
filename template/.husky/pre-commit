@@ -2,7 +2,18 @@
 echo "🔍 Running lint-staged..."
 npx lint-staged || exit 1
 
-echo "🧪 Running typecheck..."
-pnpm typecheck || exit 1
+# Detectamos el package manager por el lockfile para no hardcodear pnpm.
+if [ -f pnpm-lock.yaml ]; then
+  PKG="pnpm"
+elif [ -f yarn.lock ]; then
+  PKG="yarn"
+elif [ -f bun.lockb ]; then
+  PKG="bun"
+else
+  PKG="npm"
+fi
+
+echo "🧪 Running typecheck ($PKG)..."
+$PKG run typecheck || exit 1
 
 echo "✅ Pre-commit checks passed"

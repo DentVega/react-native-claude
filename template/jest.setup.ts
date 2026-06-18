@@ -1,4 +1,5 @@
-import '@testing-library/jest-native/extend-expect';
+// RNTL v12.4+ ya incluye los matchers (toBeOnTheScreen, toHaveStyle, etc.).
+// No es necesario importar @testing-library/jest-native.
 
 // Reanimated: mock oficial (cubre Animated y dependencias internas).
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));

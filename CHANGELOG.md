@@ -17,6 +17,24 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ### Added
 - Sección **"Principios de diseño de componentes"** en `template/CLAUDE.md` con reglas concretas: una responsabilidad por componente, composición sobre props booleanas, props chicas, promoción de primitivos a `components/ui/`, fuente única por tipo de dato, inyección por props en el borde presentational. Incluye bloque explícito de qué no seguimos (Atomic Design completo, SOLID al pie de la letra).
+- Soporte del layout `src/app/` además de `app/` raíz en `eslint.config.js` (boundaries acepta ambos) y en `apply-template` (detecta `APP_DIR`).
+- `tsconfig.json#paths` ahora expone `@/assets/*` apuntando a `./assets/*`, y `babel.config.js` agrega el alias equivalente.
+- Script `lint:strict` (con `--max-warnings=0`) en `template/package.json`. El `lint` por defecto queda permisivo para no forzar zero-warnings al adoptar el template en proyectos existentes.
+- `apply-template` Paso 9b: crea `.env` desde `.env.example` automáticamente si no existe.
+
+### Changed
+- `template/tsconfig.json`: removido `baseUrl` (deprecado en TS 6); `paths` pasados a forma relativa; agregado `types: ["jest", "node"]` para que tests y `jest.setup.ts` resuelvan globals.
+- `template/jest.config.js`: corregido el typo `setupFilesAfterEach` → `setupFilesAfterEnv` (sin esto, `jest.setup.ts` nunca corría y los mocks no aplicaban).
+- `template/src/config/env.ts`: validación **perezosa** (Proxy). Ya no se hace `throw` en import-time, así el template recién aplicado no crashea al boot si todavía no existe `.env`.
+- `template/eslint.config.js`: registro explícito del plugin `@typescript-eslint`; elementos de `boundaries` con `mode: 'file'` (boundaries v6 cambió el default a `folder`); agregados los tipos `theme` y `styles`; permitidos imports intra-capa (`lib→lib`, `services→services`, etc.); `components` puede importar de `services` (para `ApiError` en `ScreenState`); overrides para `jest.setup.ts`, `scripts/**`, y configs raíz; soporte de `app/**/*` y `src/app/**/*` en simultáneo.
+- `template/eslint.config.js`: removida `@typescript-eslint/consistent-type-imports` del bloque global (requiere typed-linting y crasheaba al lintar archivos `.js`). Documentado cómo reactivarla con un override TS-only si se quiere.
+- `template/.husky/pre-commit`: detecta el package manager por lockfile (`pnpm-lock.yaml`, `yarn.lock`, `bun.lockb`, default `npm`) en vez de hardcodear `pnpm`.
+- `template/.claude/settings.json`: agregadas variantes `npm`, `yarn` y `bun` de los permisos que antes solo cubrían `pnpm`.
+- `template/.claude/commands/feature.md`: paso final no asume `pnpm`.
+- `commands/apply-template.md`: detecta `APP_DIR` (`app/` vs `src/app/`); `README.md` clasificado como user-owned; PM-agnostic (`$PKG` en vez de `pnpm` hardcodeado); rewrite explícito de `.husky/pre-commit` después de `husky init` (que lo sobrescribe con `npm test`); warning destacado si quedó `[PROYECTO_APP_ID]` en `.maestro/*.yaml`.
+
+### Removed
+- `@testing-library/jest-native` de `template/package.json#devDependencies` y la línea `import '@testing-library/jest-native/extend-expect'` de `template/jest.setup.ts`. La dep estaba deprecada y rompía `npm install` con `ERESOLVE` en React 19. RNTL v12.4+ ya trae los matchers (`toBeOnTheScreen`, `toHaveStyle`, etc.) integrados.
 
 ---
 

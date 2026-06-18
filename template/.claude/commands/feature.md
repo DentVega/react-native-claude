@@ -151,8 +151,8 @@ Crear archivos `.gitkeep` vacíos en `screens/`, `components/` y `hooks/` para q
 
 Al terminar:
 
-1. Correr `pnpm typecheck` para verificar que todo compila.
-2. Correr `pnpm lint` para verificar que cumple las reglas de boundaries.
+1. Correr el script de typecheck del proyecto (`pnpm typecheck`, `npm run typecheck`, `yarn typecheck` o `bun run typecheck` según el package manager) para verificar que todo compila.
+2. Correr el script de lint del proyecto para verificar que cumple las reglas de boundaries.
 3. Reportar al usuario:
    - Qué archivos se crearon.
    - Recordatorios:
