@@ -115,6 +115,7 @@ Esto es lo más delicado. Reglas:
    - `scripts`: agregar los del template que falten. Si hay conflicto (un script con el mismo nombre y distinto contenido), **mostrar el diff y preguntar**.
    - `dependencies` y `devDependencies`: agregar las que falten. Si una dep ya existe con otra versión, mantener la versión del proyecto y **avisar** al usuario al final.
    - `lint-staged`: agregar la sección completa del template si no existe. Si existe, no tocar (asumir que el usuario lo customizó).
+   - `pnpm.onlyBuiltDependencies`: hacer **unión** de los arrays del template y del proyecto (sin duplicados). pnpm v10+ exige esta allowlist para correr postinstall scripts de paquetes como `unrs-resolver`; si no la propagás, `pnpm install` falla.
    - Otras keys (`name`, `version`, `main`, `private`): no tocar.
 3. Escribir el nuevo `package.json` con formato consistente (2 espacios de indentación, newline final).
 

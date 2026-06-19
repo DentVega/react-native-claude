@@ -17,6 +17,13 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ### Added
 - Secciones **"Por qué este template"** (6 beneficios) y **"Cuándo NO usarlo"** en el `README.md` raíz, para que un lector nuevo entienda el valor del template (y dónde NO encaja) antes de la lista técnica de features.
+- `template/package.json` declara `pnpm.onlyBuiltDependencies: ["unrs-resolver"]` para que pnpm v10+ no bloquee `pnpm install` por postinstall scripts no aprobados.
+
+### Changed
+- `commands/apply-template.md` (Paso 6) y `.github/workflows/test-template.yml` (merge step): ahora propagan el campo `pnpm` del template al `package.json` del proyecto destino, haciendo unión de `onlyBuiltDependencies` sin duplicados.
+
+### Fixed
+- CI workflow `test-template.yml`: el job "Validar template en proyecto Expo limpio" fallaba en `Instalar dependencias` con `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: unrs-resolver@1.12.2`. Resuelto al propagar la allowlist de pnpm.
 
 ---
 
