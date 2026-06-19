@@ -15,16 +15,34 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ## [Unreleased]
 
+---
+
+## [1.1.2] - 2026-05-25
+
+Patch release: el CI `test-template` queda verde de punta a punta (install + typecheck + lint + jest) sobre un proyecto Expo SDK 56 / React 19 / pnpm v11 limpio, y se agregan dos reglas de diseño cuantificadas para que el agente no produzca archivos gigantes ni código duplicado sin querer.
+
 ### Added
 - Secciones **"Por qué este template"** (6 beneficios) y **"Cuándo NO usarlo"** en el `README.md` raíz, para que un lector nuevo entienda el valor del template (y dónde NO encaja) antes de la lista técnica de features.
-- `template/pnpm-workspace.yaml` con `onlyBuiltDependencies: [unrs-resolver]` para que pnpm v10+ no bloquee `pnpm install` con `ERR_PNPM_IGNORED_BUILDS`. (Corrige una primera versión del fix que ponía la allowlist en `package.json#pnpm`, deprecado en pnpm v10.)
-- Secciones **8. Tamaño máximo de archivos** y **9. Reutilización: cuándo y dónde extraer** en `template/CLAUDE.md`, dentro de "Principios de diseño de componentes". Cuantifican límites por tipo de archivo (componentes 150, hooks 80, lib 50/función, etc.) y codifican la regla de tres con un mapeo capa→destino para que Claude considere mover código a `lib/`, `hooks/`, `components/ui/`, `services/` o `constants/` cuando corresponde — sin extraer prematuro.
+- Secciones **8. Tamaño máximo de archivos** y **9. Reutilización: cuándo y dónde extraer** en `template/CLAUDE.md` (dentro de "Principios de diseño de componentes"). Cuantifican límites por tipo de archivo (componentes 150, hooks 80, lib 50/función, etc.) y codifican la regla de tres con un mapeo capa→destino para que Claude considere mover código a `lib/`, `hooks/`, `components/ui/`, `services/` o `constants/` cuando corresponde — sin extraer prematuro.
+- `template/pnpm-workspace.yaml` con `allowBuilds: { unrs-resolver: true }` para destrabar el postinstall script de `unrs-resolver` que pnpm v10+ bloquea por defecto (`ERR_PNPM_IGNORED_BUILDS`).
+- `template/nativewind-env.d.ts` con `/// <reference types="nativewind/types" />` + `declare module '*.css' {}`. Sin este archivo, TS rompe en cada `className` de View/Text/Pressable y en el side-effect import de `global.css`.
+- `react-native-worklets` como dep (peer obligatorio de `react-native-reanimated@4`, sin la cual `@react-native/jest-preset` falla al cargar).
+- `@react-native/jest-preset` como devDep (peer obligatorio de `jest-expo` ahora que se movió a paquete separado).
+- `@types/node` y `@typescript-eslint/eslint-plugin` como devDeps explícitas (antes eran transitivos frágiles).
+- `react-test-renderer: "*"` como devDep (peer de RNTL que pnpm no auto-alineaba).
+- `commands/apply-template.md` (Paso 6): documenta que `pnpm-workspace.yaml` se copia tal cual y, en proyectos monorepo, se mergea la lista `allowBuilds`.
 
 ### Changed
-- `commands/apply-template.md` (Paso 6): documenta que el merge de `pnpm-workspace.yaml` corre **fuera** del merge de `package.json` — copiar tal cual si el destino no tiene uno, o hacer unión de `onlyBuiltDependencies` si el destino es monorepo.
+- `template/package.json`: pin de versiones para compatibilidad con SDK 56 / React 19:
+  - `eslint: ^9` (v10 crashea `eslint-plugin-react@7.37`).
+  - `jest: ^29` + `@types/jest: ^29` (v30 incompat con `jest-expo@56`).
+  - `@babel/core: ^7` (v8 incompat con la mayoría de los plugins existentes).
+  - `@testing-library/react-native: ^13` (v14 tenía un bug de binding de `screen` en combinación con jest-expo).
+- `template/jest.config.js`: removida la sobreescritura de `transformIgnorePatterns`. Ahora se hereda del preset `jest-expo`, que ya cubre `@react-native/*`, `@expo/*` y el layout `.pnpm/<pkg>@<ver>/node_modules/`.
+- `.github/workflows/test-template.yml`: flipeado el orden del merge de `dependencies`/`devDependencies` — ahora el proyecto Expo destino gana en caso de conflicto (sus versiones están alineadas con el SDK). Coincide con la regla documentada en `apply-template.md` Paso 6.
 
 ### Fixed
-- CI workflow `test-template.yml`: el job "Validar template en proyecto Expo limpio" fallaba en `Instalar dependencias` con `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: unrs-resolver@1.12.2`. Resuelto vía `pnpm-workspace.yaml`.
+- CI `Test Template` queda 100% verde sobre proyecto Expo limpio. Cadena de fixes resueltos en esta release: postinstall scripts de `unrs-resolver`, key `pnpm` deprecada en `package.json`, comando `bash` interpretando backticks de un comentario inline, regex de pnpm-workspace.yaml v11 (`allowBuilds`), `@types/node` faltante, types de NativeWind no augmentados, módulos `*.css` no declarados, ESLint v10 + plugin-react crash, jest-expo peer obligatorio, jest 30 incompat con jest-expo 56, regex de `transformIgnorePatterns` sin contemplar pnpm, `@babel/core` v8 incompat, RNTL v14 screen-binding bug, mismatched `react-test-renderer` por orden de merge incorrecto.
 
 ---
 
@@ -139,7 +157,8 @@ Primera versión pública. Base completa para apps Expo con TypeScript, NativeWi
 - `commands/update-template.md` — slash command para actualizar el template
 - `scripts/install-commands.sh` — instalador de los comandos en `~/.claude/commands/`
 
-[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/DentVega/react-native-claude/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/DentVega/react-native-claude/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/DentVega/react-native-claude/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/DentVega/react-native-claude/releases/tag/v1.0.0
