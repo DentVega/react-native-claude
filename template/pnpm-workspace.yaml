@@ -1,8 +1,9 @@
-# pnpm v10+ movió las settings del campo `pnpm` de package.json a este archivo.
-# Aquí declaramos qué dependencias pueden correr postinstall scripts (sin esto,
-# pnpm los bloquea con ERR_PNPM_IGNORED_BUILDS).
+# pnpm v10 movió las settings de package.json#pnpm a este archivo.
+# pnpm v11 renombró `onlyBuiltDependencies` a `allowBuilds` y cambió el formato
+# de array a mapa `paquete: bool`. Documentado en https://pnpm.io/settings.
 #
-# Este NO es un proyecto monorepo — la lista `packages` está vacía a propósito.
+# Por defecto pnpm bloquea TODOS los postinstall scripts; acá listamos los que sí
+# pueden correr. Sin esto: ERR_PNPM_IGNORED_BUILDS al instalar.
 
-onlyBuiltDependencies:
-  - unrs-resolver
+allowBuilds:
+  unrs-resolver: true
