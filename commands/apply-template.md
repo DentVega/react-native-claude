@@ -115,8 +115,9 @@ Esto es lo más delicado. Reglas:
    - `scripts`: agregar los del template que falten. Si hay conflicto (un script con el mismo nombre y distinto contenido), **mostrar el diff y preguntar**.
    - `dependencies` y `devDependencies`: agregar las que falten. Si una dep ya existe con otra versión, mantener la versión del proyecto y **avisar** al usuario al final.
    - `lint-staged`: agregar la sección completa del template si no existe. Si existe, no tocar (asumir que el usuario lo customizó).
-   - `pnpm.onlyBuiltDependencies`: hacer **unión** de los arrays del template y del proyecto (sin duplicados). pnpm v10+ exige esta allowlist para correr postinstall scripts de paquetes como `unrs-resolver`; si no la propagás, `pnpm install` falla.
    - Otras keys (`name`, `version`, `main`, `private`): no tocar.
+
+**`pnpm-workspace.yaml`** (archivo separado, no es parte de `package.json`): pnpm v10+ exige declarar acá la allowlist de build scripts (`onlyBuiltDependencies: [unrs-resolver, ...]`). Si el proyecto destino **no** tiene `pnpm-workspace.yaml`, copialo del template tal cual. Si **sí** tiene uno (proyecto monorepo, por ejemplo), mergeá el array `onlyBuiltDependencies` haciendo unión sin duplicados — sin esto, `pnpm install` falla con `ERR_PNPM_IGNORED_BUILDS`.
 3. Escribir el nuevo `package.json` con formato consistente (2 espacios de indentación, newline final).
 
 ## Paso 7 — Crear estructura de carpetas

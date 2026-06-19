@@ -1,0 +1,8 @@
+# pnpm v10+ movió las settings del campo `pnpm` de package.json a este archivo.
+# Aquí declaramos qué dependencias pueden correr postinstall scripts (sin esto,
+# pnpm los bloquea con ERR_PNPM_IGNORED_BUILDS).
+#
+# Este NO es un proyecto monorepo — la lista `packages` está vacía a propósito.
+
+onlyBuiltDependencies:
+  - unrs-resolver

@@ -29,11 +29,6 @@
       "prettier --write"
     ]
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "unrs-resolver"
-    ]
-  },
   "dependencies": {
     "expo": "latest",
     "expo-router": "latest",
