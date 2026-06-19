@@ -78,6 +78,7 @@
     "jest-expo": "latest",
     "@react-native/jest-preset": "latest",
     "@testing-library/react-native": "^13",
+    "react-test-renderer": "*",
     "@types/jest": "^29",
     "@types/node": "latest",
     "@typescript-eslint/eslint-plugin": "latest",

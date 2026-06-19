@@ -56,8 +56,10 @@ jobs:
             const templatePkg = JSON.parse(fs.readFileSync('$TEMPLATE_DIR/package.json', 'utf8'));
 
             projectPkg.scripts = { ...templatePkg.scripts, ...projectPkg.scripts };
-            projectPkg.dependencies = { ...projectPkg.dependencies, ...templatePkg.dependencies };
-            projectPkg.devDependencies = { ...projectPkg.devDependencies, ...templatePkg.devDependencies };
+            // Para deps: el proyecto Expo gana en conflictos (su versión está
+            // alineada con su SDK). Las que no existen, se agregan del template.
+            projectPkg.dependencies = { ...templatePkg.dependencies, ...projectPkg.dependencies };
+            projectPkg.devDependencies = { ...templatePkg.devDependencies, ...projectPkg.devDependencies };
             projectPkg['lint-staged'] = templatePkg['lint-staged'];
             // pnpm v10+ moved onlyBuiltDependencies from package.json#pnpm to
             // pnpm-workspace.yaml. That file is already copied by cp -r above,
