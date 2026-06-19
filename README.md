@@ -6,6 +6,38 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Expo](https://img.shields.io/badge/Expo-managed-000020?logo=expo)
 
+## Por qué este template
+
+### 🤖 AI-native desde el primer commit
+
+El `CLAUDE.md` no es documentación que el equipo lee en el onboarding y después olvida. Es un manual que el agente carga **cada vez** que abrís el proyecto: stack, capas, qué se permite, qué no, cómo nombrar, dónde poner cada cosa. La diferencia práctica es enorme: Claude pasa de "te tiro una solución genérica de React" a "te tiro una solución que respeta tu arquitectura, usa tus librerías y nombra como vos nombrás".
+
+### 🏛️ Arquitectura forzada por tooling, no por disciplina
+
+Las reglas de capas (`features/` aislados entre sí, `lib/` sin deps del proyecto, container vs presentational) las pone `eslint-plugin-boundaries`. No son sugerencias en un Notion que nadie abre — un PR que las rompe **no pasa el lint**. Esto importa especialmente con agentes: aunque el agente olvide la regla a media generación, el linter no la olvida. La arquitectura se mantiene sin que tengas que hacer code review de cada línea.
+
+### 📦 Versionado y actualizable
+
+`.template-version` registra qué versión del template aplicaste, y `/update-template` calcula el diff cuando sale una nueva. Se preservan los archivos que personalizaste (tu `CLAUDE.md`, tu `tailwind.config.js`), se crea un branch de backup antes de aplicar. Esto resuelve el problema clásico de los starters: copia única que diverge al día 2 y nunca más se sincroniza con upstream.
+
+### 🧠 Skills externas curadas
+
+Con tres comandos (Expo, Callstack, Vercel) instalás a Claude todo lo que necesita saber sobre performance RN, Expo Router, EAS Build, FlashList, Reanimated, composición de componentes, etc. Las skills son **user-level**: las instalás una vez por máquina y aplican a todos tus proyectos automáticamente. No tenés que enseñarle a Claude el dominio cada vez que arrancás.
+
+### ⏱️ Comprime la decisión-fatiga del día 0
+
+Arrancar un proyecto Expo serio normalmente son 2-3 días de "¿router file-based o nativo?, ¿Redux o Zustand?, ¿TanStack Query o SWR?, ¿NativeWind o StyleSheet?, ¿cómo armo `src/`?, ¿qué setup de tests?". Acá todo eso está pre-decidido, justificado en la tabla de "Decisiones técnicas", y forzado por el linter. La primera línea de código real no se posterga eligiendo herramientas.
+
+### 🌎 Bilingüe con español default
+
+i18n viene con `es.json` primero y `en.json` como fallback. El `CLAUDE.md` está en español. Los mensajes de error, los comentarios del template, las strings UI de ejemplo: todo en español. Para equipos LATAM esto se nota: no estás retrofiteando localización a un template que asumió inglés desde el header.
+
+## Cuándo NO usarlo
+
+- **POC de fin de semana.** El setup vale ~30 minutos de aplicación + entender las reglas. Para algo que no va a sobrevivir al lunes, es overkill.
+- **Equipos con stack ortogonal.** Si vas a usar StyleSheet puro, Redux, REST con codegen propio, o cualquier combinación que rompa 4+ de las decisiones del template, forkear y modificar es viable pero ya no son 5 minutos. Vale la pena solo si vas a aplicar tu fork a varios proyectos.
+- **Proyectos legacy.** Si tu app ya tiene 2 años, una arquitectura distinta, y un equipo acostumbrado a sus convenciones, retrofitear las reglas de `boundaries` cuesta más que ignorarlas. El template está pensado para arrancar desde cero o desde un `create-expo-app` reciente.
+
 ## Qué incluye
 
 - 🏗️ **Arquitectura por capas** forzada con `eslint-plugin-boundaries` (features aislados, container/presentational, reglas de dependencia explícitas)
