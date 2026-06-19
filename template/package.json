@@ -64,7 +64,7 @@
     "lucide-react-native": "latest"
   },
   "devDependencies": {
-    "@babel/core": "latest",
+    "@babel/core": "^7",
     "@types/react": "latest",
     "typescript": "latest",
     "eslint": "^9",
