@@ -18,6 +18,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 ### Added
 - Secciones **"Por qué este template"** (6 beneficios) y **"Cuándo NO usarlo"** en el `README.md` raíz, para que un lector nuevo entienda el valor del template (y dónde NO encaja) antes de la lista técnica de features.
 - `template/pnpm-workspace.yaml` con `onlyBuiltDependencies: [unrs-resolver]` para que pnpm v10+ no bloquee `pnpm install` con `ERR_PNPM_IGNORED_BUILDS`. (Corrige una primera versión del fix que ponía la allowlist en `package.json#pnpm`, deprecado en pnpm v10.)
+- Secciones **8. Tamaño máximo de archivos** y **9. Reutilización: cuándo y dónde extraer** en `template/CLAUDE.md`, dentro de "Principios de diseño de componentes". Cuantifican límites por tipo de archivo (componentes 150, hooks 80, lib 50/función, etc.) y codifican la regla de tres con un mapeo capa→destino para que Claude considere mover código a `lib/`, `hooks/`, `components/ui/`, `services/` o `constants/` cuando corresponde — sin extraer prematuro.
 
 ### Changed
 - `commands/apply-template.md` (Paso 6): documenta que el merge de `pnpm-workspace.yaml` corre **fuera** del merge de `package.json` — copiar tal cual si el destino no tiene uno, o hacer unión de `onlyBuiltDependencies` si el destino es monorepo.

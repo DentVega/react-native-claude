@@ -304,6 +304,55 @@ Ya está en "Manejo de estado" más arriba; repetido acá porque es un principio
 - Preferí código verboso y claro a abstracciones inteligentes que ahorran 3 líneas pero esconden la intención.
 - Repetir 2-3 veces algo similar está bien. Abstraé al **tercer caso real**, no por anticipación.
 
+### 8. Tamaño máximo de archivos
+
+Límites duros que hay que verificar **antes** de cerrar un archivo. Si pasa el límite, dividir antes de seguir — no después.
+
+| Tipo de archivo | Límite | Por qué |
+|---|---|---|
+| Componente presentational (`components/`, `features/X/components/`) | **150 líneas** | Si pasa, casi siempre tiene dos responsabilidades |
+| Container / Screen (`features/X/screens/`) | **200 líneas** | Más orquestación, pero si supera, extraer al hook |
+| Hook (`hooks/`, `features/X/hooks/`) | **80 líneas** | Hooks largos suelen ser dos hooks pegados |
+| Utilidad pura (`lib/`) | **50 líneas por función pública** | Si crece, partir por dominio |
+| Service (`services/`, `features/X/services/`) | **150 líneas** | Si crece, partir por recurso/endpoint |
+| Store Zustand (`features/X/store.ts`) | **100 líneas** | Si pasa, probablemente conviene dividir en dos stores |
+| Test file | sin límite duro, pero **>300 líneas** = revisar si testea más de una unidad |
+
+**Cuando pasás el límite**: NO comentás `// TODO: dividir` y seguís. Dividís ahí mismo. Es más fácil partir ahora que después.
+
+**Excepciones explícitas** (los límites NO aplican):
+- Archivos generados (`api.generated.ts`, locales JSON).
+- Tipos auto-generados de OpenAPI / GraphQL.
+
+### 9. Reutilización: cuándo y dónde extraer
+
+**Regla de tres**: extraé al **tercer** uso real, no por anticipación. Dos casos similares pueden ser coincidencia; tres es un patrón.
+
+**Mapeo capa-de-origen → destino al extraer**:
+
+| Si lo que se repite es… | Va a… |
+|---|---|
+| Función pura sin estado, usada en 2+ features | `src/lib/` |
+| Hook con lógica reusable, usado en 2+ features | `src/hooks/` |
+| Componente visual sin lógica de negocio, usado en 2+ features | `src/components/ui/` |
+| Llamada HTTP genérica (auth, file upload) usada en 2+ features | `src/services/` |
+| Constante de UI / config compartida | `src/constants/` |
+
+**Antes de extraer, preguntate**:
+1. ¿Es **realmente** la misma lógica, o solo se parece? Si los matices entre los tres usos son distintos, no es duplicación — son tres cosas similares.
+2. ¿La abstracción genera **más complejidad** que las tres duplicaciones? Si el helper tiene 6 parámetros para cubrir los 3 casos, dejá las 3 duplicaciones.
+3. ¿Necesita **escapar del feature**? Lógica que solo tiene sentido dentro de `features/auth/` se queda ahí aunque "se podría usar" en otro lado.
+
+**Cuando estés escribiendo código nuevo y detectes que es similar a algo existente**:
+- Si es el **segundo** caso: dejar una nota corta ("similar a X — esperar al tercero para extraer") y seguir con el código duplicado.
+- Si es el **tercer** caso: hacer la extracción **en el mismo PR**. No dejar la deuda para "después".
+
+**Qué NO hacer**:
+- Crear `<GenericCard>` con 15 props para "soportar todos los casos futuros".
+- Mover algo a `lib/` cuando solo lo usa un feature ("por las dudas").
+- Abstraer en el **primer** uso porque "obvio que va a venir otro" — casi nunca viene, y cuando viene es distinto.
+- Extraer cosas triviales: un `<View className="flex-1">` no necesita abstracción.
+
 ### Qué NO seguimos (a propósito)
 
 - **Atomic Design** (atoms/molecules/organisms/templates/pages): la organización **por feature** que ya tenés escala mejor para apps. Sí mantenemos la idea de "primitivos compartidos" via `components/ui/`, pero sin la jerarquía de 5 niveles.
