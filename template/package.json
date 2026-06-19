@@ -77,6 +77,8 @@
     "jest-expo": "latest",
     "@testing-library/react-native": "latest",
     "@types/jest": "latest",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
     "husky": "latest",
     "lint-staged": "latest",
     "@commitlint/cli": "latest",
