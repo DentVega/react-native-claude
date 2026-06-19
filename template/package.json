@@ -75,6 +75,7 @@
     "react-native-svg-transformer": "latest",
     "jest": "latest",
     "jest-expo": "latest",
+    "@react-native/jest-preset": "latest",
     "@testing-library/react-native": "latest",
     "@types/jest": "latest",
     "@types/node": "latest",
