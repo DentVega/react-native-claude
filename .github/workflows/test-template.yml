@@ -59,9 +59,9 @@ jobs:
             projectPkg.dependencies = { ...projectPkg.dependencies, ...templatePkg.dependencies };
             projectPkg.devDependencies = { ...projectPkg.devDependencies, ...templatePkg.devDependencies };
             projectPkg['lint-staged'] = templatePkg['lint-staged'];
-            // NOTA: la allowlist de build scripts vive en `pnpm-workspace.yaml`
-            // (pnpm v10+ deprecó el campo `pnpm` en package.json). El archivo se
-            // copia con el `cp -r` del paso anterior, no hay que mergear nada acá.
+            // pnpm v10+ moved onlyBuiltDependencies from package.json#pnpm to
+            // pnpm-workspace.yaml. That file is already copied by cp -r above,
+            // so nothing extra to merge here.
 
             fs.writeFileSync('package.json', JSON.stringify(projectPkg, null, 2) + '\n');
           "
