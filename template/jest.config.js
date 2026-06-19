@@ -2,9 +2,10 @@
 module.exports = {
   preset: 'jest-expo',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?(/.*)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|nativewind|react-native-css-interop))',
-  ],
+  // No definimos transformIgnorePatterns: heredamos el del preset jest-expo,
+  // que ya cubre @react-native/*, @expo/*, react-native-* y maneja el layout
+  // de pnpm (node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>). Si necesitás
+  // transformar una lib extra, hacelo extendiendo el array del preset.
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
