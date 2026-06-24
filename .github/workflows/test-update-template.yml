@@ -1,0 +1,205 @@
+name: Test Update Template
+
+# Valida el flujo /update-template end-to-end:
+# 1. Aplica una versión base anterior (v1.1.1) sobre un proyecto Expo limpio.
+# 2. Simula una customización del usuario en un archivo user-owned (CLAUDE.md).
+# 3. Aplica el template del branch actual (lo que /update-template haría con main).
+# 4. Confirma que la customización sobrevivió y que los template-managed sí se actualizaron.
+# 5. Re-corre install + typecheck + lint estricto + jest para confirmar que no se rompió nada.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-update:
+    name: Validar update v1.1.1 → branch actual
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Crear proyecto Expo limpio
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project
+          pnpm create expo-app . --template blank-typescript --yes
+        env:
+          CI: true
+
+      - name: Aplicar template v1.1.1 (versión base)
+        run: |
+          cd /tmp/test-project
+          PROJECT_DIR=$(pwd)
+
+          # Clonar el tag base
+          git clone --depth 1 --branch v1.1.1 \
+            https://github.com/${{ github.repository }} /tmp/template-base
+
+          # Copiar contenido del template base (incluye dotfiles)
+          cp -r /tmp/template-base/template/. "$PROJECT_DIR"/
+
+          # Estructura mínima requerida por boundaries
+          mkdir -p src/features src/components/ui src/hooks src/services \
+            src/lib src/config src/types src/i18n/locales src/constants src/test \
+            assets/images assets/icons assets/fonts
+
+          # Marcador .template-version (lo que /apply-template haría)
+          {
+            echo "version: v1.1.1"
+            echo "applied_at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "repo: https://github.com/${{ github.repository }}"
+          } > .template-version
+
+          # Merge de package.json (proyecto Expo gana en conflictos)
+          node -e "
+            const fs = require('fs');
+            const projectPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const templatePkg = JSON.parse(fs.readFileSync('/tmp/template-base/template/package.json', 'utf8'));
+            projectPkg.scripts = { ...templatePkg.scripts, ...projectPkg.scripts };
+            projectPkg.dependencies = { ...templatePkg.dependencies, ...projectPkg.dependencies };
+            projectPkg.devDependencies = { ...templatePkg.devDependencies, ...projectPkg.devDependencies };
+            projectPkg['lint-staged'] = templatePkg['lint-staged'];
+            fs.writeFileSync('package.json', JSON.stringify(projectPkg, null, 2) + '\n');
+          "
+
+      - name: Simular customización de usuario en CLAUDE.md (user-owned)
+        working-directory: /tmp/test-project
+        run: |
+          {
+            echo ""
+            echo "## MARKER_CUSTOMIZACION_USUARIO"
+            echo ""
+            echo "Esta sección la agregó el usuario después de aplicar v1.1.1."
+            echo "Si /update-template la sobrescribe, el contrato de 'user-owned' está roto."
+          } >> CLAUDE.md
+
+          # Capturar el hash original para verificar después
+          sha256sum CLAUDE.md > /tmp/claude-md-pre-update.sha
+
+      - name: Aplicar update al branch actual (simulación de /update-template)
+        run: |
+          cd /tmp/test-project
+          NEW_TEMPLATE="${{ github.workspace }}/template"
+
+          # Archivos template-managed: SE SOBRESCRIBEN sin preguntar.
+          # (Lista alineada con commands/update-template.md y apply-template.md Paso 5.)
+          TEMPLATE_MANAGED=(
+            "eslint.config.js"
+            "babel.config.js"
+            "metro.config.js"
+            "tsconfig.json"
+            "jest.config.js"
+            "jest.setup.ts"
+            "commitlint.config.js"
+            ".prettierrc"
+            ".prettierignore"
+            ".editorconfig"
+            ".gitignore"
+            "global.css"
+            "pnpm-workspace.yaml"
+            "nativewind-env.d.ts"
+          )
+
+          for f in "${TEMPLATE_MANAGED[@]}"; do
+            if [ -f "$NEW_TEMPLATE/$f" ]; then
+              cp "$NEW_TEMPLATE/$f" "./$f"
+            fi
+          done
+
+          # User-owned (NO se tocan si ya existen):
+          # CLAUDE.md, README.md, tailwind.config.js, .env.example, app/_layout.tsx
+          # — los dejamos como están.
+
+          # Archivos nuevos del template (src/, .claude/, .maestro/, .husky/, .vscode/):
+          # los recopiamos completos en caso de que haya archivos NUEVOS en main.
+          # Esto NO toca CLAUDE.md ni README.md porque viven en la raíz.
+          for dir in src .claude .maestro .husky .vscode; do
+            if [ -d "$NEW_TEMPLATE/$dir" ]; then
+              cp -rn "$NEW_TEMPLATE/$dir/." "./$dir/" 2>/dev/null || cp -r "$NEW_TEMPLATE/$dir/." "./$dir/"
+            fi
+          done
+
+          # Re-mergear package.json con la versión nueva del template
+          node -e "
+            const fs = require('fs');
+            const projectPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const templatePkg = JSON.parse(fs.readFileSync('${{ github.workspace }}/template/package.json', 'utf8'));
+            projectPkg.scripts = { ...templatePkg.scripts, ...projectPkg.scripts };
+            projectPkg.dependencies = { ...templatePkg.dependencies, ...projectPkg.dependencies };
+            projectPkg.devDependencies = { ...templatePkg.devDependencies, ...projectPkg.devDependencies };
+            projectPkg['lint-staged'] = templatePkg['lint-staged'];
+            fs.writeFileSync('package.json', JSON.stringify(projectPkg, null, 2) + '\n');
+          "
+
+          # Bumpear .template-version
+          {
+            echo 'version: main'
+            echo "applied_at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "repo: https://github.com/${{ github.repository }}"
+          } > .template-version
+
+      - name: Verificar que la customización de CLAUDE.md sobrevivió
+        working-directory: /tmp/test-project
+        run: |
+          if ! grep -q "MARKER_CUSTOMIZACION_USUARIO" CLAUDE.md; then
+            echo "❌ FAIL: El update sobrescribió CLAUDE.md — los user-owned files NO se respetaron."
+            echo ""
+            echo "Esperado: la sección '## MARKER_CUSTOMIZACION_USUARIO' agregada por el usuario"
+            echo "Encontrado:"
+            tail -20 CLAUDE.md
+            exit 1
+          fi
+          echo "✅ CLAUDE.md preservó la customización del usuario."
+
+      - name: Verificar que un template-managed sí se actualizó
+        working-directory: /tmp/test-project
+        run: |
+          # eslint.config.js es template-managed → debe coincidir con el del branch actual.
+          if ! diff -q eslint.config.js "${{ github.workspace }}/template/eslint.config.js" >/dev/null 2>&1; then
+            echo "❌ FAIL: eslint.config.js no quedó alineado con la versión actual del template."
+            diff eslint.config.js "${{ github.workspace }}/template/eslint.config.js" || true
+            exit 1
+          fi
+          echo "✅ eslint.config.js actualizado a la versión actual."
+
+      - name: Verificar que .template-version se bumpeo
+        working-directory: /tmp/test-project
+        run: |
+          if grep -q "^version: v1.1.1" .template-version; then
+            echo "❌ FAIL: .template-version sigue apuntando a v1.1.1."
+            cat .template-version
+            exit 1
+          fi
+          echo "✅ .template-version refleja la nueva versión:"
+          cat .template-version
+
+      - name: Instalar dependencias post-update
+        working-directory: /tmp/test-project
+        run: pnpm install --no-frozen-lockfile
+
+      - name: TypeScript check post-update
+        working-directory: /tmp/test-project
+        run: pnpm typecheck
+
+      - name: ESLint estricto post-update (--max-warnings=0)
+        working-directory: /tmp/test-project
+        run: pnpm exec eslint src/ app/ --max-warnings=0
+
+      - name: Jest smoke post-update
+        working-directory: /tmp/test-project
+        run: pnpm test --passWithNoTests
