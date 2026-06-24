@@ -5,7 +5,11 @@
  * - En producción: solo `warn` y `error` (los `info`/`debug` se silencian)
  *
  * En el futuro se puede enchufar a Sentry o PostHog.
+ *
+ * Este archivo es el ÚNICO lugar donde se permiten llamadas directas a
+ * `console.*` — el resto del código debe importar este `logger`.
  */
+/* eslint-disable no-console */
 
 const isDev = __DEV__;
 

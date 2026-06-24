@@ -2,9 +2,9 @@ import { type UseQueryResult } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-import { Button } from './Button';
-
 import { ApiError } from '@/services/api';
+
+import { Button } from './Button';
 
 /**
  * Componente unificado para estados de loading / error / empty.

@@ -24,6 +24,10 @@ function getInitialLanguage(): SupportedLanguage {
     : 'es';
 }
 
+// El API encadenable de i18next (`i18n.use(...).init(...)`) usa el default
+// export; el lint warning `import/no-named-as-default-member` es un falso
+// positivo en este caso — no estamos confundiendo el default con un named export.
+// eslint-disable-next-line import/no-named-as-default-member
 void i18n.use(initReactI18next).init({
   lng: getInitialLanguage(),
   fallbackLng: 'es',
