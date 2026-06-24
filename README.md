@@ -65,15 +65,15 @@ i18n viene con `es.json` primero y `en.json` como fallback. El `CLAUDE.md` está
 **Opción A — CLI vía npx (recomendado)**
 
 ```bash
-npx expo-config-template install
+npx @dentvega/expo-config-template install
 ```
 
 Otros subcomandos útiles del CLI:
 
 ```bash
-npx expo-config-template doctor          # chequear requisitos
-npx expo-config-template apply           # validar proyecto + guiar /apply-template
-npx expo-config-template update          # validar proyecto + guiar /update-template
+npx @dentvega/expo-config-template doctor   # chequear requisitos
+npx @dentvega/expo-config-template apply    # validar proyecto + guiar /apply-template
+npx @dentvega/expo-config-template update   # validar proyecto + guiar /update-template
 ```
 
 **Opción B — Script bash (sin Node)**
@@ -116,7 +116,7 @@ Claude muestra el changelog, calcula el diff, respeta archivos que personalizast
 expo-config-template/
 ├── template/         # Los archivos que se aplican al proyecto destino
 ├── commands/         # Slash commands de Claude Code (/apply-template, /update-template)
-├── cli/              # CLI launcher publicada en npm como `expo-config-template`
+├── cli/              # CLI launcher publicada en npm como `@dentvega/expo-config-template`
 ├── scripts/          # Instalador bash de los comandos (fallback sin Node)
 ├── docs/             # Documentación extendida (installation, customization, design-decisions)
 ├── .github/          # CI (test-template.yml) e issue templates

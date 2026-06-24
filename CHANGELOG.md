@@ -15,6 +15,10 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ## [Unreleased]
 
+### Changed
+- `cli/package.json`: paquete renombrado a **`@dentvega/expo-config-template`** (scoped) y versión bumpeada a **1.0.0** para señalar que el CLI ya es usable end-to-end. Pendiente: publicar a npm con `npm publish` desde `cli/`.
+- `cli/README.md` y `README.md` raíz: ejemplos de uso actualizados a `npx @dentvega/expo-config-template <subcomando>`. El bin sigue siendo `expo-config-template`, así que un `npm install -g @dentvega/expo-config-template` permite invocarlo sin el scope.
+
 ---
 
 ## [1.1.3] - 2026-05-25

@@ -1,7 +1,7 @@
 {
-  "name": "expo-config-template",
-  "version": "0.1.0",
-  "description": "CLI launcher para aplicar el expo-config-template a proyectos Expo via Claude Code.",
+  "name": "@dentvega/expo-config-template",
+  "version": "1.0.0",
+  "description": "CLI launcher para aplicar el expo-config-template (DentVega/react-native-claude) a proyectos Expo via Claude Code.",
   "type": "module",
   "bin": {
     "expo-config-template": "./dist/index.js"

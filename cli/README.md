@@ -1,4 +1,4 @@
-# expo-config-template (CLI)
+# @dentvega/expo-config-template (CLI)
 
 Launcher para aplicar el [expo-config-template](https://github.com/DentVega/react-native-claude) a un proyecto Expo via Claude Code.
 
@@ -6,16 +6,24 @@ Launcher para aplicar el [expo-config-template](https://github.com/DentVega/reac
 
 ```bash
 # Instalar slash commands (una vez por máquina)
-npx expo-config-template install
+npx @dentvega/expo-config-template install
 
 # Dentro de un proyecto Expo
 cd mi-app
-npx expo-config-template apply           # valida y guía a /apply-template
-npx expo-config-template update          # valida y guía a /update-template
-npx expo-config-template doctor          # chequea requisitos
+npx @dentvega/expo-config-template apply           # valida y guía a /apply-template
+npx @dentvega/expo-config-template update          # valida y guía a /update-template
+npx @dentvega/expo-config-template doctor          # chequea requisitos
 
 # Apuntar a una versión específica del template
-npx expo-config-template apply v1.2.0
+npx @dentvega/expo-config-template apply v1.2.0
+```
+
+Alternativa: instalar global y usar el bin `expo-config-template` directo:
+
+```bash
+npm install -g @dentvega/expo-config-template
+expo-config-template install
+expo-config-template apply
 ```
 
 ## Por qué guía en vez de ejecutar
