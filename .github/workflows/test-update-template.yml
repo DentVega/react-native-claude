@@ -125,12 +125,15 @@ jobs:
           # CLAUDE.md, README.md, tailwind.config.js, .env.example, app/_layout.tsx
           # — los dejamos como están.
 
-          # Archivos nuevos del template (src/, .claude/, .maestro/, .husky/, .vscode/):
-          # los recopiamos completos en caso de que haya archivos NUEVOS en main.
-          # Esto NO toca CLAUDE.md ni README.md porque viven en la raíz.
+          # Estructura interna del template (src/, .claude/, .maestro/, .husky/,
+          # .vscode/): per update-template.md Paso 6, autoaplicar si el usuario
+          # no modificó. En CI no hay forma de preguntar, así que asumimos "no
+          # modificó" y sobrescribimos. Esto propaga fixes a archivos como
+          # src/lib/logger.ts (no-console disable) que en v1.1.1 tenían warnings.
+          # CLAUDE.md y README.md no se tocan porque viven en la raíz.
           for dir in src .claude .maestro .husky .vscode; do
             if [ -d "$NEW_TEMPLATE/$dir" ]; then
-              cp -rn "$NEW_TEMPLATE/$dir/." "./$dir/" 2>/dev/null || cp -r "$NEW_TEMPLATE/$dir/." "./$dir/"
+              cp -r "$NEW_TEMPLATE/$dir/." "./$dir/"
             fi
           done
 
