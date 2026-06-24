@@ -134,14 +134,18 @@ jobs:
             fi
           done
 
-          # Re-mergear package.json con la versión nueva del template
+          # Re-mergear package.json. Para un update simulamos el escenario en que
+          # el usuario aprobó todas las actualizaciones de pins propuestas por el
+          # template (lo que sugiere el Paso 7 de update-template.md): el template
+          # GANA sobre el proyecto para deps que ya existían. Eso propaga los pin
+          # fixes (ej. eslint ^9 reemplazando un viejo "latest" que resolvió a v10).
           node -e "
             const fs = require('fs');
             const projectPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
             const templatePkg = JSON.parse(fs.readFileSync('${{ github.workspace }}/template/package.json', 'utf8'));
             projectPkg.scripts = { ...templatePkg.scripts, ...projectPkg.scripts };
-            projectPkg.dependencies = { ...templatePkg.dependencies, ...projectPkg.dependencies };
-            projectPkg.devDependencies = { ...templatePkg.devDependencies, ...projectPkg.devDependencies };
+            projectPkg.dependencies = { ...projectPkg.dependencies, ...templatePkg.dependencies };
+            projectPkg.devDependencies = { ...projectPkg.devDependencies, ...templatePkg.devDependencies };
             projectPkg['lint-staged'] = templatePkg['lint-staged'];
             fs.writeFileSync('package.json', JSON.stringify(projectPkg, null, 2) + '\n');
           "

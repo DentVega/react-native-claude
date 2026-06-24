@@ -96,7 +96,7 @@ Aplicar las mismas reglas que `/apply-template`:
 
 - **`.claude/commands/*.md`**: actualizar (son comandos auxiliares del template).
 
-- **`package.json`**: aplicar mismo merge del paso 6 de `/apply-template`. Mostrar diff de scripts/deps antes.
+- **`package.json`**: a diferencia de `/apply-template` (donde el proyecto Expo gana en conflictos para preservar las versiones que el SDK pidió), en el **update** el orden default es el inverso: el **template gana**, así propagás los pin updates (ej. `eslint: ^9` reemplazando un `latest` que resolvió a v10 con el bug de `plugin-react`). Antes de aplicar, mostrar al usuario el diff completo de `dependencies`/`devDependencies` (Paso 7) y permitirle vetar cambios específicos.
 
 ## Paso 7 — Resumen pre-aplicación
 
