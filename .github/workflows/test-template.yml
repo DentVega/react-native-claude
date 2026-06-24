@@ -80,6 +80,10 @@ jobs:
         working-directory: /tmp/test-project
         run: pnpm exec eslint . --max-warnings=50
 
+      - name: ESLint estricto sobre archivos del template (--max-warnings=0)
+        working-directory: /tmp/test-project
+        run: pnpm exec eslint src/ app/ --max-warnings=0
+
       - name: Prettier check
         working-directory: /tmp/test-project
         run: pnpm format:check
