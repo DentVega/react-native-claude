@@ -17,6 +17,27 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) y este
 
 ---
 
+## [1.1.3] - 2026-05-25
+
+Patch release: dos workflows nuevos de CI cubren todo el ciclo de vida del template (apply + update), con tolerancia cero de warnings en los archivos que el template shipea. Dos bugs del contrato de `/update-template` salieron a la luz durante el E2E y quedaron documentados + cubiertos por test.
+
+### Added
+- Workflow `test-update-template.yml`: aplica `v1.1.1` sobre un proyecto Expo limpio, agrega un marker user-owned en `CLAUDE.md`, simula `/update-template` al branch actual y verifica que (a) el marker sobrevivió, (b) un archivo template-managed (`eslint.config.js`) sí se actualizó, (c) `.template-version` bumpeó, (d) install + typecheck + lint estricto + jest siguen pasando. Catchea regresiones en el contrato de update que un humano corriendo el slash command sí notaría.
+- Step nuevo en `test-template.yml`: **ESLint estricto sobre archivos del template** (`pnpm exec eslint src/ app/ --max-warnings=0`). Antes el lint global con `--max-warnings=50` enmascaraba warnings en código que nosotros shipeamos. Cualquier regresión futura en `template/src/` o `template/app/` ahora rompe CI.
+
+### Changed
+- `commands/update-template.md` Paso 6: aclarado que el merge de `package.json` en update **invierte** la regla de `apply-template` — el template gana en conflictos, así propaga pin updates (ej. `eslint: ^9` reemplazando un `latest` que resolvió a v10). Antes el doc decía "mismo merge que apply", que en la práctica bloqueaba los fixes del template para usuarios que ya tenían el template aplicado.
+- `template/src/components/ui/ScreenState.tsx`: import order ajustado para que `@/services/api` (internal) preceda a `./Button` (sibling), per `import/order`.
+- `template/src/i18n/index.ts`: agregado `eslint-disable-next-line import/no-named-as-default-member` en la línea de `i18n.use(initReactI18next).init(...)` — el API encadenable de i18next es el uso documentado del default export, el warning es un falso positivo.
+- `template/src/lib/logger.ts`: agregado `/* eslint-disable no-console */` a nivel de archivo + comentario aclarando que este es el único lugar donde el proyecto permite llamadas directas a `console.*`.
+
+### Fixed
+- CI Test Update Template descubrió dos bugs en el contrato del update que ya estaban shipeados sin testear:
+  - El merge de `package.json` en update usaba la misma regla que apply (project-wins), bloqueando la propagación de pin updates del template a proyectos viejos. Cualquier usuario que aplicó v1.1.1 y corriera `/update-template` para ir a v1.1.2 mantenía su `eslint: latest` (resolución → v10, con el crash de `plugin-react`) en vez de adoptar el nuevo `^9`.
+  - El cp de directorios template-internal (`src/`, `.claude/`, etc.) en el flow de update era no-clobber (`cp -rn`), así que los fixes a archivos como `src/lib/logger.ts` o `src/i18n/index.ts` introducidos en v1.1.2 no llegaban a proyectos viejos. Per `update-template.md` Paso 6, estos archivos deberían autoaplicar cuando el usuario no los modificó — el workflow ahora simula ese caso.
+
+---
+
 ## [1.1.2] - 2026-05-25
 
 Patch release: el CI `test-template` queda verde de punta a punta (install + typecheck + lint + jest) sobre un proyecto Expo SDK 56 / React 19 / pnpm v11 limpio, y se agregan dos reglas de diseño cuantificadas para que el agente no produzca archivos gigantes ni código duplicado sin querer.
@@ -157,7 +178,8 @@ Primera versión pública. Base completa para apps Expo con TypeScript, NativeWi
 - `commands/update-template.md` — slash command para actualizar el template
 - `scripts/install-commands.sh` — instalador de los comandos en `~/.claude/commands/`
 
-[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/DentVega/react-native-claude/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/DentVega/react-native-claude/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/DentVega/react-native-claude/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/DentVega/react-native-claude/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/DentVega/react-native-claude/compare/v1.0.0...v1.1.0
